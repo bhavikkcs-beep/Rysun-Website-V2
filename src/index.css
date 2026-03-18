@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+  --color-rysun-blue: #2D2F8F;
+  --color-rysun-lightblue: #00A9E9;
+  --color-rysun-darkpurple: #5C103E;
+  --color-rysun-maroon: #92263D;
+  --color-rysun-red: #E72E2D;
+  --color-rysun-orange: #EB8923;
+
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #FAFAFA;
+  color: #1A1A1A;
+}
