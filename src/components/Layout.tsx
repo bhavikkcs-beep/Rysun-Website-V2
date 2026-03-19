@@ -5,22 +5,6 @@ import { ChevronDown, Menu, X, MessageSquare, Linkedin, Twitter, Youtube, Award,
 
 const Logo = () => (
   <Link to="/" className="flex items-center gap-2">
-    <div className="relative w-8 h-8 flex items-center justify-center">
-      <svg viewBox="0 0 100 100" className="w-full h-full">
-        <defs>
-          <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#EB8923" />
-            <stop offset="100%" stopColor="#E72E2D" />
-          </linearGradient>
-          <linearGradient id="grad2" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#5C103E" />
-            <stop offset="100%" stopColor="#00A9E9" />
-          </linearGradient>
-        </defs>
-        <path d="M 20 80 L 20 40 C 20 20, 50 20, 50 40 C 50 60, 20 60, 20 80 Z" fill="url(#grad2)" />
-        <path d="M 20 40 C 20 20, 80 20, 80 40 C 80 60, 50 60, 50 40" fill="none" stroke="url(#grad1)" strokeWidth="16" strokeLinecap="round" />
-      </svg>
-    </div>
     <span className="text-2xl font-bold text-rysun-blue tracking-tight">Rysun</span>
   </Link>
 );
@@ -364,7 +348,7 @@ const Footer = () => (
           </p>
           <div className="flex items-center gap-2 text-gray-300 mb-8 bg-gray-800/50 w-max px-4 py-2 rounded-full border border-gray-700">
             <Award className="w-4 h-4 text-rysun-lightblue" />
-            <span className="text-xs font-semibold tracking-wider uppercase">CMMI Certified</span>
+            <span className="text-xs font-semibold tracking-wider uppercase">CMMI5 CERTIFIED</span>
           </div>
           <div className="flex gap-5">
             <a href="#" className="text-gray-400 hover:text-rysun-lightblue transition-colors"><Linkedin className="w-5 h-5" /></a>
