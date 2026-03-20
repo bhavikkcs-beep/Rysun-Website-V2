@@ -160,7 +160,7 @@ const industriesList = [
   'Manufacturing'
 ];
 
-export default function EventsWebinarsPage() {
+export default function EventsPage() {
   const [activeTopic, setActiveTopic] = useState('All');
   const [activeEventType, setActiveEventType] = useState('All');
   const [activeIndustry, setActiveIndustry] = useState('All');
@@ -205,7 +205,7 @@ export default function EventsWebinarsPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 tracking-tight"
           >
-            Events & Webinars
+            Events
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}

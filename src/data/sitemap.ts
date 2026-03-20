@@ -91,10 +91,9 @@ export const sitemap = {
   },
   Insights: [
     "Impact Stories",
-    "Perspectives (POVs)",
+    "Rysun XChange",
     "Blogs",
-    "Events & Webinars",
-    "Podcasts",
+    "Events",
     "News"
   ],
   Company: {
@@ -112,11 +111,10 @@ export const sitemap = {
       "ShopMate",
       "RevMate"
     ],
-    "Why Rysun": [],
     "Careers": [
       "Life at Rysun",
       "Current Openings",
-      "Apply to Join the Team"
+      "Submit Profile"
     ]
   }
 };

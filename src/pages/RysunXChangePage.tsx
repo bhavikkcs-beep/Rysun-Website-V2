@@ -128,7 +128,7 @@ const contentTypesList = [
   'Technology Trends'
 ];
 
-export default function PerspectivesPage() {
+export default function RysunXChangePage() {
   const [activeTopic, setActiveTopic] = useState('All');
   const [activeIndustry, setActiveIndustry] = useState('All');
   const [activeContentType, setActiveContentType] = useState('All');
@@ -178,7 +178,7 @@ export default function PerspectivesPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-5 tracking-tight"
           >
-            Perspectives
+            Rysun XChange
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -204,11 +204,11 @@ export default function PerspectivesPage() {
         </div>
       </section>
 
-      {/* 2. Featured Perspectives */}
+      {/* 2. Featured Rysun XChange */}
       <section className="py-24 bg-slate-50 border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-12">
-            <h2 className="text-3xl font-bold text-slate-900">Featured Perspectives</h2>
+            <h2 className="text-3xl font-bold text-slate-900">Featured Rysun XChange</h2>
           </div>
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -329,7 +329,7 @@ export default function PerspectivesPage() {
         </div>
       </section>
 
-      {/* 4. Perspectives Library (Main Grid) */}
+      {/* 4. Rysun XChange Library (Main Grid) */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -403,7 +403,7 @@ export default function PerspectivesPage() {
           <div className="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
             <Mail className="w-8 h-8 text-blue-600" />
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Stay Ahead with Rysun Perspectives</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">Stay Ahead with Rysun XChange</h2>
           <p className="text-lg text-slate-600 mb-10 max-w-2xl mx-auto">
             Get the latest insights on AI, Data, and Digital transformation delivered directly to your inbox.
           </p>

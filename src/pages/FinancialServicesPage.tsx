@@ -631,7 +631,7 @@ const FinancialServicesPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-end mb-12">
             <div className="max-w-2xl">
-              <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4">Perspectives & Thinking</h2>
+              <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4">Insights & Thinking</h2>
               <p className="text-lg text-gray-600">Latest insights on AI, data, and digital transformation in financial services.</p>
             </div>
             <Link to="/insights/blogs" className="hidden md:inline-flex items-center text-rysun-blue font-bold hover:text-rysun-lightblue transition-colors">

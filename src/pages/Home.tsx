@@ -868,7 +868,7 @@ const Insights = () => (
       <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
         <div className="max-w-2xl">
           <h2 className="text-2xl md:text-4xl font-bold text-gray-900 mb-4">Latest Insights</h2>
-          <p className="text-lg text-gray-600">Perspectives on AI, data, and digital transformation from our experts.</p>
+          <p className="text-lg text-gray-600">Insights on AI, data, and digital transformation from our experts.</p>
         </div>
         <Link to="/insights/blogs" className="hidden md:inline-flex items-center text-rysun-blue font-bold hover:text-rysun-lightblue transition-colors">
           View All Insights <ArrowRight className="ml-2 w-4 h-4" />

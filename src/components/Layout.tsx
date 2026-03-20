@@ -56,6 +56,7 @@ const MegaMenu = () => {
                     setActiveMenu(key);
                     if (key === 'Capabilities') setActiveTab(Object.keys(sitemap.Capabilities)[0]);
                     if (key === 'Industries') setActiveTab(Object.keys(sitemap.Industries)[0]);
+                    if (key === 'Company') setActiveTab(Object.keys(sitemap.Company)[0]);
                   }}
                   onMouseLeave={() => setActiveMenu(null)}
                 >
@@ -383,10 +384,9 @@ const Footer = () => (
           <h4 className="text-sm font-bold text-white mb-6 uppercase tracking-wider">Insights</h4>
           <ul className="space-y-3 text-sm text-gray-400">
             <li><Link to="/insights/impact-stories" className="hover:text-rysun-lightblue transition-colors">Impact Stories</Link></li>
-            <li><Link to="/insights/perspectives-povs" className="hover:text-rysun-lightblue transition-colors">Perspectives (POVs)</Link></li>
+            <li><Link to="/insights/rysun-xchange" className="hover:text-rysun-lightblue transition-colors">Rysun XChange</Link></li>
             <li><Link to="/insights/blogs" className="hover:text-rysun-lightblue transition-colors">Blogs</Link></li>
-            <li><Link to="/insights/events-webinars" className="hover:text-rysun-lightblue transition-colors">Events & Webinars</Link></li>
-            <li><Link to="/insights/podcasts" className="hover:text-rysun-lightblue transition-colors">Podcasts</Link></li>
+            <li><Link to="/insights/events" className="hover:text-rysun-lightblue transition-colors">Events</Link></li>
             <li><Link to="/insights/news" className="hover:text-rysun-lightblue transition-colors">News</Link></li>
           </ul>
         </div>
@@ -398,8 +398,15 @@ const Footer = () => (
             <li><Link to="/company/about-rysun" className="hover:text-rysun-lightblue transition-colors">About Rysun</Link></li>
             <li><Link to="/company/leadership" className="hover:text-rysun-lightblue transition-colors">Leadership</Link></li>
             <li><Link to="/company/partnerships-alliances" className="hover:text-rysun-lightblue transition-colors">Partnerships & Alliances</Link></li>
-            <li><Link to="/company/why-rysun" className="hover:text-rysun-lightblue transition-colors">Why Rysun</Link></li>
-            <li><Link to="/company/careers" className="hover:text-rysun-lightblue transition-colors">Careers</Link></li>
+            <li><Link to="/company/products" className="hover:text-rysun-lightblue transition-colors">Products</Link></li>
+            <li>
+              <Link to="/company/careers" className="hover:text-rysun-lightblue transition-colors block mb-2">Careers</Link>
+              <ul className="pl-3 space-y-2 border-l border-gray-700">
+                <li><Link to="/company/careers/life-at-rysun" className="text-xs hover:text-rysun-lightblue transition-colors">Life at Rysun</Link></li>
+                <li><Link to="/company/careers/current-openings" className="text-xs hover:text-rysun-lightblue transition-colors">Current Openings</Link></li>
+                <li><Link to="/company/careers/submit-profile" className="text-xs hover:text-rysun-lightblue transition-colors">Submit Profile</Link></li>
+              </ul>
+            </li>
           </ul>
         </div>
       </div>

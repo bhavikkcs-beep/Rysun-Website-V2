@@ -485,7 +485,7 @@ export default function HealthcarePage() {
           <div className="flex justify-between items-end mb-12">
             <div className="max-w-2xl">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Insights & Thought Leadership</h2>
-              <p className="text-lg text-gray-600">Perspectives on AI, data, and digital transformation in healthcare.</p>
+              <p className="text-lg text-gray-600">Insights on AI, data, and digital transformation in healthcare.</p>
             </div>
             <Link to="/insights" className="hidden md:inline-flex items-center text-teal-600 font-bold hover:text-teal-700 transition-colors">
               View All Insights <ArrowRight className="ml-2 w-4 h-4" />
