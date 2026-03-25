@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, BrainCircuit, Database, Globe, Cloud, LayoutGrid, MonitorSmartphone, PlayCircle, CheckCircle2, ChevronRight, BarChart3, ShieldCheck, Zap, Users, Send, Bot, User, Loader2, Sparkles, Network, Cpu, ChevronLeft, ShoppingCart, HeartPulse, Shield, Truck, Server, Mic, Presentation, Lightbulb, Activity, Calendar, MapPin } from 'lucide-react';
+import { ArrowRight, BrainCircuit, Database, Globe, Cloud, LayoutGrid, MonitorSmartphone, PlayCircle, CheckCircle2, ChevronRight, BarChart3, ShieldCheck, Zap, Users, Send, Bot, User, Loader2, Sparkles, Network, Cpu, ChevronLeft, ShoppingCart, HeartPulse, Shield, Truck, Server, Mic, MicOff, Volume2, Presentation, Lightbulb, Activity, Calendar, MapPin, Play, Pause, Square, Maximize2, Minimize2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleGenAI } from '@google/genai';
+import ReactMarkdown from 'react-markdown';
 
 const Slide1Infographic = () => (
   <div className="relative w-full aspect-square max-w-lg mx-auto flex items-center justify-center">
@@ -355,26 +356,171 @@ const HeroSlider = () => {
 };
 
 const AIChatAssistant = () => {
+  const [isFullScreen, setIsFullScreen] = useState(false);
   const [messages, setMessages] = useState<{ role: 'user' | 'model', text: string }[]>([
     { role: 'model', text: 'Hello! I am the Rysun AI Assistant. I can help you understand how our AI, Data, and Digital Engineering capabilities can transform your enterprise. What would you like to know?' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [suggestedQuestions, setSuggestedQuestions] = useState([
+    "How can AI improve our retail operations?",
+    "What is your approach to Data Engineering?",
+    "Can you share a digital transformation success story?"
+  ]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatContainerRef = useRef<HTMLDivElement>(null);
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef<any>(null);
+  const transcriptRef = useRef<string>('');
+  const [playingIdx, setPlayingIdx] = useState<number | null>(null);
+  const [isPaused, setIsPaused] = useState(false);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        recognitionRef.current = new SpeechRecognition();
+        recognitionRef.current.continuous = false;
+        recognitionRef.current.interimResults = true;
+
+        recognitionRef.current.onresult = (event: any) => {
+          let currentTranscript = '';
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            currentTranscript += event.results[i][0].transcript;
+          }
+          transcriptRef.current = currentTranscript;
+          setInput(currentTranscript);
+        };
+
+        recognitionRef.current.onerror = (event: any) => {
+          console.error('Speech recognition error', event.error);
+          setIsListening(false);
+          transcriptRef.current = '';
+          if (event.error === 'not-allowed') {
+            setInput('Error: Microphone access denied. Please allow microphone access.');
+          }
+        };
+
+        recognitionRef.current.onend = () => {
+          setIsListening(false);
+          if (transcriptRef.current.trim()) {
+            // We can't call handleSend directly here because it might use stale state
+            // Instead, we'll use a separate effect or just let the user click send
+            // Actually, we can dispatch a custom event or just click the send button
+            const sendBtn = document.getElementById('ai-send-btn');
+            if (sendBtn) {
+              sendBtn.click();
+            }
+          }
+          transcriptRef.current = '';
+        };
+      }
+    }
+  }, []);
+
+  const toggleListening = () => {
+    if (!recognitionRef.current) {
+      setInput('Error: Speech recognition is not supported in this browser.');
+      return;
+    }
+    if (isListening) {
+      recognitionRef.current.stop();
+    } else {
+      setInput('');
+      recognitionRef.current.start();
+      setIsListening(true);
+    }
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+    if (typeof window !== 'undefined' && window.speechSynthesis) {
+      window.speechSynthesis.getVoices();
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
+    }
+  }, []);
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  const playAudio = (idx: number, text: string) => {
+    if (playingIdx === idx && isPaused) {
+      window.speechSynthesis.resume();
+      setIsPaused(false);
+      return;
+    }
+    
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    
+    // Try to find an American Female voice
+    const voices = window.speechSynthesis.getVoices();
+    const preferredNames = ['Samantha', 'Zira', 'Salli', 'Victoria', 'Female'];
+    let selectedVoice = voices.find(v => 
+      (v.lang === 'en-US' || v.lang === 'en_US') && 
+      preferredNames.some(name => v.name.includes(name))
+    );
+    
+    // Fallback to any en-US voice if specific female ones aren't found
+    if (!selectedVoice) {
+      selectedVoice = voices.find(v => v.lang === 'en-US' || v.lang === 'en_US');
+    }
+    
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+    }
+    
+    utterance.onend = () => {
+      setPlayingIdx(null);
+      setIsPaused(false);
+    };
+    utterance.onerror = () => {
+      setPlayingIdx(null);
+      setIsPaused(false);
+    };
+    
+    setPlayingIdx(idx);
+    setIsPaused(false);
+    window.speechSynthesis.speak(utterance);
+  };
 
-    const userMessage = input.trim();
+  const pauseAudio = () => {
+    window.speechSynthesis.pause();
+    setIsPaused(true);
+  };
+
+  const stopAudio = () => {
+    window.speechSynthesis.cancel();
+    setPlayingIdx(null);
+    setIsPaused(false);
+  };
+
+  useEffect(() => {
+    if (!isLoading && messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      if (lastMessage.role === 'model') {
+        const element = document.getElementById(`message-${messages.length - 1}`);
+        const container = chatContainerRef.current;
+        if (element && container) {
+          container.scrollTo({ top: element.offsetTop - 24, behavior: 'smooth' });
+        }
+      } else {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }
+    } else if (isLoading) {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isLoading]);
+
+  const handleSend = async (textToSubmit?: string | React.MouseEvent | React.KeyboardEvent) => {
+    const messageText = typeof textToSubmit === 'string' ? textToSubmit : input;
+    const userMessage = messageText.trim();
+    if (!userMessage || isLoading) return;
+
     setInput('');
+    if (isListening) {
+      transcriptRef.current = ''; // Prevent auto-send onend
+      recognitionRef.current?.stop();
+      setIsListening(false);
+    }
     setMessages(prev => [...prev, { role: 'user', text: userMessage }]);
     setIsLoading(true);
 
@@ -382,20 +528,46 @@ const AIChatAssistant = () => {
       const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
       
       const systemInstruction = `You are a helpful AI assistant for Rysun Labs, a technology consulting company specializing in AI, Data & Analytics, and Digital Engineering. 
-      Keep your answers concise, professional, and focused on enterprise solutions. 
+      You MUST base your answers on information from the official Rysun website (rysun.com). 
+      Use the Google Search tool to find accurate information from site:rysun.com to answer the user's queries.
+      Keep your answers concise, professional, and formatted using Markdown (use bullet points and paragraphs where appropriate).
       Highlight Rysun's expertise in delivering measurable impact, accelerating innovation, and building scalable platforms.
-      If asked about services, mention Artificial Intelligence, Data Engineering, Digital Transformation, Cloud & DevOps.
-      If asked about industries, mention Retail, Healthcare, Financial Services, Manufacturing, and Logistics.`;
+      
+      IMPORTANT: At the very end of your response, you MUST provide exactly three short suggested follow-up questions related to the topic. Format them exactly like this on new lines:
+      SUGGESTED_Q1: [First follow-up question]
+      SUGGESTED_Q2: [Second follow-up question]
+      SUGGESTED_Q3: [Third follow-up question]`;
 
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
-        contents: userMessage,
+        contents: `Search site:rysun.com to answer the following query: ${userMessage}`,
         config: {
           systemInstruction,
+          tools: [{ googleSearch: {} }],
         }
       });
 
-      setMessages(prev => [...prev, { role: 'model', text: response.text || 'I am sorry, I could not process that request.' }]);
+      let responseText = response.text || 'I am sorry, I could not process that request.';
+      
+      const q1Match = responseText.match(/SUGGESTED_Q1:\s*(.+)/);
+      const q2Match = responseText.match(/SUGGESTED_Q2:\s*(.+)/);
+      const q3Match = responseText.match(/SUGGESTED_Q3:\s*(.+)/);
+      
+      if (q1Match || q2Match || q3Match) {
+        const newSuggestions = [];
+        if (q1Match) newSuggestions.push(q1Match[1].replace(/[*"]/g, '').trim());
+        if (q2Match) newSuggestions.push(q2Match[1].replace(/[*"]/g, '').trim());
+        if (q3Match) newSuggestions.push(q3Match[1].replace(/[*"]/g, '').trim());
+        
+        while (newSuggestions.length < 3) {
+            newSuggestions.push(suggestedQuestions[newSuggestions.length]);
+        }
+        
+        setSuggestedQuestions(newSuggestions.slice(0, 3));
+        responseText = responseText.replace(/SUGGESTED_Q[123]:\s*(.+)/g, '').trim();
+      }
+
+      setMessages(prev => [...prev, { role: 'model', text: responseText }]);
     } catch (error) {
       console.error('Chat error:', error);
       setMessages(prev => [...prev, { role: 'model', text: 'I apologize, but I am currently experiencing technical difficulties. Please try again later or contact our team directly.' }]);
@@ -405,16 +577,16 @@ const AIChatAssistant = () => {
   };
 
   return (
-    <section className="py-12 bg-gradient-to-b from-gray-900 to-gray-50 relative z-20">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section className={isFullScreen ? "fixed inset-0 z-50 bg-white flex flex-col" : "py-12 bg-gradient-to-b from-gray-900 to-gray-50 relative z-20"}>
+      <div className={isFullScreen ? "w-full h-full flex-grow" : "max-w-6xl mx-auto px-4 sm:px-6 lg:px-8"}>
         <motion.div 
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-white rounded-3xl shadow-2xl border border-gray-100 overflow-hidden flex flex-col md:flex-row"
+          className={`bg-white overflow-hidden flex flex-col md:flex-row ${isFullScreen ? 'w-full h-full' : 'rounded-3xl shadow-2xl border border-gray-100'}`}
         >
           {/* Sidebar */}
-          <div className="w-full md:w-1/3 bg-gradient-to-br from-blue-50 to-indigo-50 p-8 border-b md:border-b-0 md:border-r border-blue-100 flex flex-col justify-center">
+          <div className="w-full md:w-1/3 bg-gradient-to-br from-blue-50 to-indigo-50 p-8 border-b md:border-b-0 md:border-r border-blue-100 flex flex-col justify-start pt-10">
             <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center mb-6">
               <Bot className="w-6 h-6 text-rysun-blue" />
             </div>
@@ -423,22 +595,33 @@ const AIChatAssistant = () => {
               Experience our AI capabilities firsthand. Ask me about our services, industry expertise, or how we can accelerate your digital transformation journey.
             </p>
             <div className="space-y-3">
-              <button onClick={() => setInput("How can AI improve our retail operations?")} className="text-left text-sm text-rysun-blue bg-white hover:bg-blue-50 border border-blue-100 px-4 py-3 rounded-xl transition-all shadow-sm w-full font-medium">
-                "How can AI improve our retail operations?"
-              </button>
-              <button onClick={() => setInput("What is your approach to Data Engineering?")} className="text-left text-sm text-rysun-blue bg-white hover:bg-blue-50 border border-blue-100 px-4 py-3 rounded-xl transition-all shadow-sm w-full font-medium">
-                "What is your approach to Data Engineering?"
-              </button>
+              {suggestedQuestions.map((question, idx) => (
+                <button 
+                  key={idx}
+                  onClick={() => handleSend(question)} 
+                  className="text-left text-sm text-rysun-blue bg-white hover:bg-blue-50 border border-blue-100 px-4 py-3 rounded-xl transition-all shadow-sm w-full font-medium"
+                >
+                  "{question}"
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Chat Area */}
-          <div className="w-full md:w-2/3 h-[500px] flex flex-col bg-white">
-            <div className="flex-grow p-6 overflow-y-auto space-y-6">
+          <div className={`w-full md:w-2/3 flex flex-col bg-white relative ${isFullScreen ? 'flex-1' : 'h-[500px]'}`}>
+            <button
+              onClick={() => setIsFullScreen(!isFullScreen)}
+              className="absolute top-4 right-4 z-10 p-2 bg-gray-50 hover:bg-gray-100 rounded-full text-gray-500 transition-colors border border-gray-200 shadow-sm"
+              title={isFullScreen ? "Restore" : "Maximize"}
+            >
+              {isFullScreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+            </button>
+            <div ref={chatContainerRef} className="flex-grow p-6 pt-14 overflow-y-auto space-y-6 relative">
               <AnimatePresence>
                 {messages.map((msg, idx) => (
                   <motion.div
                     key={idx}
+                    id={`message-${idx}`}
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
@@ -447,8 +630,54 @@ const AIChatAssistant = () => {
                       <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 mt-1 ${msg.role === 'user' ? 'bg-gray-100' : 'bg-gradient-to-br from-rysun-blue to-rysun-lightblue text-white shadow-sm'}`}>
                         {msg.role === 'user' ? <User className="w-4 h-4 text-gray-600" /> : <Bot className="w-4 h-4" />}
                       </div>
-                      <div className={`p-4 rounded-2xl text-sm leading-relaxed ${msg.role === 'user' ? 'bg-gray-100 text-gray-800 rounded-tr-none' : 'bg-blue-50/50 text-gray-800 rounded-tl-none border border-blue-100/50'}`}>
-                        {msg.text}
+                      <div className={`p-4 rounded-2xl text-sm leading-relaxed relative group ${msg.role === 'user' ? 'bg-gray-100 text-gray-800 rounded-tr-none' : 'bg-blue-50/50 text-gray-800 rounded-tl-none border border-blue-100/50'}`}>
+                        {msg.role === 'user' ? (
+                          msg.text
+                        ) : (
+                          <>
+                            <ReactMarkdown
+                              components={{
+                                p: ({node, ...props}) => <p className="mb-3 last:mb-0" {...props} />,
+                                ul: ({node, ...props}) => <ul className="list-disc pl-5 mb-3 last:mb-0 space-y-1" {...props} />,
+                                ol: ({node, ...props}) => <ol className="list-decimal pl-5 mb-3 last:mb-0 space-y-1" {...props} />,
+                                li: ({node, ...props}) => <li className="" {...props} />,
+                                strong: ({node, ...props}) => <strong className="font-semibold text-gray-900" {...props} />,
+                                h1: ({node, ...props}) => <h1 className="text-lg font-bold mb-2 mt-4 first:mt-0" {...props} />,
+                                h2: ({node, ...props}) => <h2 className="text-md font-bold mb-2 mt-4 first:mt-0" {...props} />,
+                                h3: ({node, ...props}) => <h3 className="text-base font-bold mb-2 mt-3 first:mt-0" {...props} />,
+                                a: ({node, ...props}) => <a className="text-rysun-blue hover:underline" {...props} />,
+                              }}
+                            >
+                              {msg.text}
+                            </ReactMarkdown>
+                            <div className="absolute -right-3 -top-3 flex gap-1">
+                              {playingIdx === idx ? (
+                                <>
+                                  {isPaused ? (
+                                    <button onClick={() => playAudio(idx, msg.text)} className="p-1.5 bg-white border border-gray-200 rounded-full text-rysun-blue hover:bg-blue-50 shadow-sm transition-all" title="Resume">
+                                      <Play className="w-4 h-4" />
+                                    </button>
+                                  ) : (
+                                    <button onClick={pauseAudio} className="p-1.5 bg-white border border-gray-200 rounded-full text-rysun-blue hover:bg-blue-50 shadow-sm transition-all" title="Pause">
+                                      <Pause className="w-4 h-4" />
+                                    </button>
+                                  )}
+                                  <button onClick={stopAudio} className="p-1.5 bg-white border border-gray-200 rounded-full text-red-500 hover:bg-red-50 shadow-sm transition-all" title="Stop">
+                                    <Square className="w-4 h-4" />
+                                  </button>
+                                </>
+                              ) : (
+                                <button 
+                                  onClick={() => playAudio(idx, msg.text)}
+                                  className="p-1.5 bg-white border border-gray-200 rounded-full text-gray-400 hover:text-rysun-blue hover:border-rysun-blue shadow-sm transition-all"
+                                  title="Listen to answer"
+                                >
+                                  <Volume2 className="w-4 h-4" />
+                                </button>
+                              )}
+                            </div>
+                          </>
+                        )}
                       </div>
                     </div>
                   </motion.div>
@@ -478,16 +707,27 @@ const AIChatAssistant = () => {
                   onChange={(e) => setInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                   placeholder="Ask the Rysun AI Assistant..."
-                  className="w-full pl-4 pr-14 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rysun-lightblue focus:border-transparent outline-none bg-gray-50 transition-all"
+                  className="w-full pl-4 pr-24 py-4 rounded-xl border border-gray-200 focus:ring-2 focus:ring-rysun-lightblue focus:border-transparent outline-none bg-gray-50 transition-all"
                   disabled={isLoading}
                 />
-                <button
-                  onClick={handleSend}
-                  disabled={!input.trim() || isLoading}
-                  className="absolute right-2 w-10 h-10 flex items-center justify-center bg-rysun-blue text-white rounded-lg hover:bg-rysun-lightblue transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
-                >
-                  <Send className="w-4 h-4" />
-                </button>
+                <div className="absolute right-2 flex items-center gap-1">
+                  <button
+                    onClick={toggleListening}
+                    disabled={isLoading}
+                    className={`w-10 h-10 flex items-center justify-center rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm ${isListening ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-white text-gray-500 border border-gray-200 hover:text-rysun-blue hover:border-rysun-blue'}`}
+                    title={isListening ? "Stop listening" : "Start voice input"}
+                  >
+                    {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                  </button>
+                  <button
+                    id="ai-send-btn"
+                    onClick={() => handleSend()}
+                    disabled={!input.trim() || isLoading}
+                    className="w-10 h-10 flex items-center justify-center bg-rysun-blue text-white rounded-lg hover:bg-rysun-lightblue transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                  >
+                    <Send className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -522,7 +762,7 @@ const CapabilityNavigator = () => {
               className="bg-gray-50 rounded-3xl p-8 border border-gray-100 hover:shadow-xl transition-all group flex flex-col h-full"
             >
               <div className="w-16 h-16 rounded-2xl bg-white flex items-center justify-center mb-6 shadow-sm text-rysun-blue group-hover:bg-rysun-blue group-hover:text-white transition-colors">
-                {React.cloneElement(cap.icon as React.ReactElement, { className: 'w-8 h-8' })}
+                {React.cloneElement(cap.icon as React.ReactElement<{ className?: string }>, { className: 'w-8 h-8' })}
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-rysun-blue transition-colors">{cap.title}</h3>
               <p className="text-gray-600 mb-6 leading-relaxed text-sm flex-grow">{cap.desc}</p>

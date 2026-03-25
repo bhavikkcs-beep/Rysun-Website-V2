@@ -21,10 +21,12 @@ import ImpactStoriesPage from './pages/ImpactStoriesPage';
 import RysunXChangePage from './pages/RysunXChangePage';
 import BlogsPage from './pages/BlogsPage';
 import EventsPage from './pages/EventsPage';
+import NewsPage from './pages/NewsPage';
 import AboutUsPage from './pages/AboutUsPage';
 import LeadershipPage from './pages/LeadershipPage';
 import PartnershipsPage from './pages/PartnershipsPage';
 import ProductsPage from './pages/ProductsPage';
+import OurJourney from './pages/OurJourney';
 
 // Digital Services Pages
 import DigitalStrategyPage from './pages/DigitalStrategyPage';
@@ -33,6 +35,8 @@ import DataAIAutomationPage from './pages/DataAIAutomationPage';
 import DigitalPlatformsPage from './pages/DigitalPlatformsPage';
 import CloudSecurityPage from './pages/CloudSecurityPage';
 import FutureOfWorkPage from './pages/FutureOfWorkPage';
+import CareersPage from './pages/CareersPage';
+import CurrentOpeningsPage from './pages/CurrentOpeningsPage';
 
 export default function App() {
   return (
@@ -60,13 +64,18 @@ export default function App() {
           <Route path="insights/rysun-xchange" element={<RysunXChangePage />} />
           <Route path="insights/blogs" element={<BlogsPage />} />
           <Route path="insights/events" element={<EventsPage />} />
+          <Route path="insights/news" element={<NewsPage />} />
           <Route path="insights/:slug" element={<GenericPage />} />
           <Route path="company/about-rysun" element={<AboutUsPage />} />
+          <Route path="our-journey" element={<OurJourney />} />
           <Route path="company/leadership" element={<LeadershipPage />} />
           <Route path="company/partnerships-alliances" element={<PartnershipsPage />} />
           <Route path="company/products" element={<ProductsPage />} />
           <Route path="company/partnerships/:slug" element={<PartnerPage />} />
+          <Route path="company/careers" element={<CareersPage />} />
+          <Route path="company/careers/current-openings" element={<CurrentOpeningsPage />} />
           <Route path="company/careers/:slug" element={<GenericPage />} />
+          <Route path="company/contact-us" element={<ContactUs />} />
           <Route path="company/:slug" element={<GenericPage />} />
           <Route path="capabilities/ai" element={<AIPage />} />
           <Route path="capabilities/data" element={<DataPage />} />

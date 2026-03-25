@@ -12,7 +12,7 @@ const Logo = () => (
 const AnnouncementStrip = () => (
   <div className="bg-gradient-to-r from-rysun-blue to-rysun-darkpurple text-white py-2 px-4 text-center text-sm font-medium flex items-center justify-center gap-4">
     <span>Celebrating 25 Years of Innovation — Rysun Labs Silver Jubilee Year</span>
-    <Link to="/company/about-rysun" className="underline hover:text-blue-200 transition-colors">
+    <Link to="/our-journey" className="underline hover:text-blue-200 transition-colors">
       Explore Our Journey
     </Link>
   </div>
@@ -384,8 +384,8 @@ const Footer = () => (
           <h4 className="text-sm font-bold text-white mb-6 uppercase tracking-wider">Insights</h4>
           <ul className="space-y-3 text-sm text-gray-400">
             <li><Link to="/insights/impact-stories" className="hover:text-rysun-lightblue transition-colors">Impact Stories</Link></li>
-            <li><Link to="/insights/rysun-xchange" className="hover:text-rysun-lightblue transition-colors">Rysun XChange</Link></li>
             <li><Link to="/insights/blogs" className="hover:text-rysun-lightblue transition-colors">Blogs</Link></li>
+            <li><Link to="/insights/rysun-xchange" className="hover:text-rysun-lightblue transition-colors">Rysun XChange</Link></li>
             <li><Link to="/insights/events" className="hover:text-rysun-lightblue transition-colors">Events</Link></li>
             <li><Link to="/insights/news" className="hover:text-rysun-lightblue transition-colors">News</Link></li>
           </ul>
@@ -399,14 +399,8 @@ const Footer = () => (
             <li><Link to="/company/leadership" className="hover:text-rysun-lightblue transition-colors">Leadership</Link></li>
             <li><Link to="/company/partnerships-alliances" className="hover:text-rysun-lightblue transition-colors">Partnerships & Alliances</Link></li>
             <li><Link to="/company/products" className="hover:text-rysun-lightblue transition-colors">Products</Link></li>
-            <li>
-              <Link to="/company/careers" className="hover:text-rysun-lightblue transition-colors block mb-2">Careers</Link>
-              <ul className="pl-3 space-y-2 border-l border-gray-700">
-                <li><Link to="/company/careers/life-at-rysun" className="text-xs hover:text-rysun-lightblue transition-colors">Life at Rysun</Link></li>
-                <li><Link to="/company/careers/current-openings" className="text-xs hover:text-rysun-lightblue transition-colors">Current Openings</Link></li>
-                <li><Link to="/company/careers/submit-profile" className="text-xs hover:text-rysun-lightblue transition-colors">Submit Profile</Link></li>
-              </ul>
-            </li>
+            <li><Link to="/company/careers" className="hover:text-rysun-lightblue transition-colors">Careers</Link></li>
+            <li><Link to="/company/contact-us" className="hover:text-rysun-lightblue transition-colors">Contact Us</Link></li>
           </ul>
         </div>
       </div>

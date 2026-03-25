@@ -91,8 +91,8 @@ export const sitemap = {
   },
   Insights: [
     "Impact Stories",
-    "Rysun XChange",
     "Blogs",
+    "Rysun XChange",
     "Events",
     "News"
   ],
@@ -115,7 +115,8 @@ export const sitemap = {
       "Life at Rysun",
       "Current Openings",
       "Submit Profile"
-    ]
+    ],
+    "Contact Us": []
   }
 };
 

@@ -69,13 +69,10 @@ export default function ProductsPage() {
                   <span>Product Innovation at Rysun</span>
                 </div>
                 <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white tracking-tight mb-5 leading-tight">
-                  AI Products That Power the Future of <span className="text-transparent bg-clip-text bg-gradient-to-r from-rysun-lightblue to-blue-400">Intelligent Enterprises</span>
+                  Innovative Products for the <span className="text-transparent bg-clip-text bg-gradient-to-r from-rysun-lightblue to-blue-400">Modern Enterprise</span>
                 </h1>
-                <p className="text-xl text-blue-200 mb-6">
-                  Discover Rysun’s portfolio of AI-powered products designed to enhance customer experiences, automate enterprise operations, and unlock new levels of digital intelligence.
-                </p>
-                <p className="text-base text-gray-300 mb-8 leading-relaxed max-w-lg">
-                  Explore innovative AI teammates and intelligent platforms built to help organizations move faster, work smarter, and deliver better experiences.
+                <p className="text-xl text-blue-200 mb-8 leading-relaxed max-w-lg">
+                  Discover Rysun’s intelligent platforms and digital solutions built to transform experiences, streamline operations, and power business growth.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <a href="#products" className="inline-flex items-center justify-center px-6 py-3 text-sm font-medium rounded-full text-white bg-gradient-to-r from-rysun-blue to-rysun-lightblue hover:shadow-[0_0_30px_rgba(0,169,233,0.5)] hover:-translate-y-0.5 transition-all">

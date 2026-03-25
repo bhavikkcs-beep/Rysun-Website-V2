@@ -1,5 +1,5 @@
 {
   "name": "Rysun Enterprise Website",
   "description": "A modern, enterprise-grade light theme website for Rysun Labs, featuring a comprehensive mega menu, dynamic service pages, and a professional consulting look.",
-  "requestFramePermissions": []
+  "requestFramePermissions": ["microphone"]
 }

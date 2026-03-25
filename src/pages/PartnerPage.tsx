@@ -63,7 +63,7 @@ export default function PartnerPage() {
             ].map((feature, idx) => (
               <div key={idx} className="p-8 rounded-3xl border border-gray-100 bg-gray-50 hover:shadow-xl transition-all">
                 <div className="w-14 h-14 rounded-2xl bg-blue-100 flex items-center justify-center text-rysun-blue mb-6">
-                  {React.cloneElement(feature.icon as React.ReactElement, { className: 'w-7 h-7' })}
+                  {React.cloneElement(feature.icon as React.ReactElement<{ className?: string }>, { className: 'w-7 h-7' })}
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">{feature.title}</h3>
                 <p className="text-gray-600">{feature.desc}</p>
