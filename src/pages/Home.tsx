@@ -5,51 +5,122 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { GoogleGenAI } from '@google/genai';
 import ReactMarkdown from 'react-markdown';
 
-const Slide1Infographic = () => (
-  <div className="relative w-full aspect-square max-w-lg mx-auto flex items-center justify-center">
-    <div className="relative w-64 h-64">
-      {/* Central Brain */}
-      <motion.div 
-        animate={{ scale: [1, 1.05, 1], opacity: [0.8, 1, 0.8] }}
-        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute inset-0 m-auto w-32 h-32 bg-gradient-to-br from-rysun-blue to-rysun-lightblue rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(0,169,233,0.4)] z-20"
-      >
-        <BrainCircuit className="w-16 h-16 text-white" />
-      </motion.div>
+const Slide1Infographic = () => {
+  const nodes = [
+    { label: "Generative AI", icon: <Sparkles />, x: 15, y: 35, delay: 0 },
+    { label: "Agentic AI", icon: <Bot />, x: 85, y: 35, delay: 0.4 },
+    { label: "Automation Workflows", icon: <Network />, x: 75, y: 80, delay: 0.8 },
+    { label: "Data Analytics", icon: <Database />, x: 25, y: 80, delay: 1.2 },
+    { label: "Business Applications", icon: <LayoutGrid />, x: 50, y: 15, delay: 1.6 }
+  ];
 
-      {/* Orbiting Nodes */}
-      {[
-        { icon: <Database />, angle: 0, delay: 0 },
-        { icon: <Cpu />, angle: 72, delay: 0.2 },
-        { icon: <Network />, angle: 144, delay: 0.4 },
-        { icon: <Globe />, angle: 216, delay: 0.6 },
-        { icon: <Zap />, angle: 288, delay: 0.8 }
-      ].map((node, i) => (
-        <motion.div
-          key={i}
-          className="absolute top-1/2 left-1/2 w-12 h-12 -ml-6 -mt-6 rounded-full bg-gray-800 border border-rysun-lightblue/30 flex items-center justify-center text-rysun-lightblue shadow-lg z-10"
-          animate={{
-            x: [
-              Math.cos((node.angle * Math.PI) / 180) * 120,
-              Math.cos(((node.angle + 360) * Math.PI) / 180) * 120
-            ],
-            y: [
-              Math.sin((node.angle * Math.PI) / 180) * 120,
-              Math.sin(((node.angle + 360) * Math.PI) / 180) * 120
-            ]
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+  const connections = [
+    // Center to nodes
+    { from: {x: 50, y: 50}, to: {x: 15, y: 35}, delay: 0 },
+    { from: {x: 50, y: 50}, to: {x: 85, y: 35}, delay: 0.4 },
+    { from: {x: 50, y: 50}, to: {x: 75, y: 80}, delay: 0.8 },
+    { from: {x: 50, y: 50}, to: {x: 25, y: 80}, delay: 1.2 },
+    { from: {x: 50, y: 50}, to: {x: 50, y: 15}, delay: 1.6 },
+    // Adjacent nodes (faint, no pulse)
+    { from: {x: 50, y: 15}, to: {x: 85, y: 35}, delay: 0, faint: true },
+    { from: {x: 85, y: 35}, to: {x: 75, y: 80}, delay: 0, faint: true },
+    { from: {x: 75, y: 80}, to: {x: 25, y: 80}, delay: 0, faint: true },
+    { from: {x: 25, y: 80}, to: {x: 15, y: 35}, delay: 0, faint: true },
+    { from: {x: 15, y: 35}, to: {x: 50, y: 15}, delay: 0, faint: true }
+  ];
+
+  return (
+    <div className="relative w-full aspect-square max-w-lg mx-auto flex items-center justify-center">
+      {/* Digital Grid Background */}
+      <div 
+        className="absolute inset-0 opacity-20" 
+        style={{ 
+          backgroundImage: 'linear-gradient(to right, #00A9E9 1px, transparent 1px), linear-gradient(to bottom, #00A9E9 1px, transparent 1px)', 
+          backgroundSize: '40px 40px', 
+          maskImage: 'radial-gradient(circle at center, black 40%, transparent 70%)', 
+          WebkitMaskImage: 'radial-gradient(circle at center, black 40%, transparent 70%)' 
+        }} 
+      />
+
+      {/* SVG Connections & Pulses */}
+      <svg className="absolute inset-0 w-full h-full z-0 pointer-events-none">
+        {connections.map((conn, i) => (
+          <g key={`conn-${i}`}>
+            {/* Static Line */}
+            <line 
+              x1={`${conn.from.x}%`} y1={`${conn.from.y}%`} 
+              x2={`${conn.to.x}%`} y2={`${conn.to.y}%`} 
+              stroke="#00A9E9" 
+              strokeWidth={conn.faint ? "1" : "2"} 
+              strokeOpacity={conn.faint ? "0.15" : "0.4"} 
+              strokeDasharray={conn.faint ? "none" : "4 4"} 
+            />
+            {/* Animated Pulse */}
+            {!conn.faint && (
+              <>
+                <motion.circle
+                  r="4"
+                  fill="#00A9E9"
+                  className="filter blur-[2px]"
+                  initial={{ cx: `${conn.from.x}%`, cy: `${conn.from.y}%`, opacity: 0 }}
+                  animate={{ cx: `${conn.to.x}%`, cy: `${conn.to.y}%`, opacity: [0, 1, 1, 0] }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: conn.delay, ease: "easeInOut" }}
+                />
+                <motion.circle
+                  r="2"
+                  fill="#FFF"
+                  initial={{ cx: `${conn.from.x}%`, cy: `${conn.from.y}%`, opacity: 0 }}
+                  animate={{ cx: `${conn.to.x}%`, cy: `${conn.to.y}%`, opacity: [0, 1, 1, 0] }}
+                  transition={{ duration: 2.5, repeat: Infinity, delay: conn.delay, ease: "easeInOut" }}
+                />
+              </>
+            )}
+          </g>
+        ))}
+      </svg>
+
+      {/* Central AI Node */}
+      <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+        <motion.div 
+          animate={{ scale: [1, 1.3, 1], opacity: [0.4, 0.8, 0.4] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute inset-0 bg-rysun-lightblue rounded-full blur-2xl"
+        />
+        <div className="relative w-24 h-24 bg-slate-900 border-2 border-rysun-lightblue rounded-full flex items-center justify-center shadow-[0_0_40px_rgba(0,169,233,0.6)]">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+            className="absolute inset-0 rounded-full border border-rysun-lightblue/30 border-dashed"
+          />
+          <BrainCircuit className="w-12 h-12 text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]" />
+        </div>
+      </div>
+
+      {/* Peripheral Nodes */}
+      {nodes.map((node, i) => (
+        <div 
+          key={`node-${i}`}
+          className="absolute z-10 flex flex-col items-center"
+          style={{ left: `${node.x}%`, top: `${node.y}%`, transform: 'translate(-50%, -50%)' }}
         >
-          {React.cloneElement(node.icon, { className: 'w-5 h-5' })}
-        </motion.div>
+          <motion.div
+            animate={{ y: [-4, 4, -4] }}
+            transition={{ duration: 4, repeat: Infinity, delay: node.delay, ease: "easeInOut" }}
+            className="flex flex-col items-center gap-3"
+          >
+            <div className="relative w-14 h-14 rounded-2xl bg-slate-900/80 border border-rysun-lightblue/40 backdrop-blur-md flex items-center justify-center shadow-[0_0_20px_rgba(0,169,233,0.2)] group">
+              <div className="absolute inset-0 bg-rysun-lightblue/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+              {React.cloneElement(node.icon, { className: "w-7 h-7 text-rysun-lightblue" })}
+            </div>
+            <div className="px-3 py-1.5 rounded-lg bg-slate-900/90 border border-white/10 text-xs font-semibold text-white whitespace-nowrap shadow-lg">
+              {node.label}
+            </div>
+          </motion.div>
+        </div>
       ))}
-
-      {/* Connecting Lines (Static representation of orbits) */}
-      <div className="absolute inset-0 rounded-full border border-rysun-lightblue/20 border-dashed animate-[spin_20s_linear_infinite]" />
-      <div className="absolute inset-4 rounded-full border border-rysun-blue/10 animate-[spin_15s_linear_infinite_reverse]" />
     </div>
-  </div>
-);
+  );
+};
 
 const Slide2Infographic = () => (
   <div className="relative w-full aspect-square max-w-lg mx-auto flex items-center justify-center">

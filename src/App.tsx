@@ -27,6 +27,8 @@ import LeadershipPage from './pages/LeadershipPage';
 import PartnershipsPage from './pages/PartnershipsPage';
 import ProductsPage from './pages/ProductsPage';
 import OurJourney from './pages/OurJourney';
+import AIStrategyPage from './pages/AIStrategyPage';
+import AIArchitectureEngineeringPage from './pages/AIArchitectureEngineeringPage';
 
 // Digital Services Pages
 import DigitalStrategyPage from './pages/DigitalStrategyPage';
@@ -46,6 +48,8 @@ export default function App() {
           <Route index element={<Home />} />
           
           {/* Specific Digital Services Pages */}
+          <Route path="service/ai-strategy-governance-transformation" element={<AIStrategyPage />} />
+          <Route path="service/ai-architecture-engineering" element={<AIArchitectureEngineeringPage />} />
           <Route path="service/digital-strategy-transformation" element={<DigitalStrategyPage />} />
           <Route path="service/experience-product-innovation" element={<ExperienceInnovationPage />} />
           <Route path="service/data-ai-intelligent-automation" element={<DataAIAutomationPage />} />
